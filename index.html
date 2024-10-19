@@ -12,23 +12,27 @@
 <body>
     <!-- Load three.js first -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/three.min.js"></script>
-    <!-- Load the GLTFLoader after three.js -->
-    <script src="https://cdn.jsdelivr.net/npm/three@0.152.2/examples/js/loaders/GLTFLoader.js"></script>
-    <script>
-        // Ensure that THREE is available before using it
+    <!-- Load the GLTFLoader from the same CDN as three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/jsm/loaders/GLTFLoader.js" type="module"></script>
+    <script type="module">
+        import { GLTFLoader } from 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r152/examples/jsm/loaders/GLTFLoader.js';
+
+        // Set up the scene, camera, and renderer
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
 
+        // Add a light
         const light = new THREE.DirectionalLight(0xffffff, 1);
         light.position.set(5, 10, 7.5).normalize();
         scene.add(light);
 
-        const loader = new THREE.GLTFLoader();
+        // Load the GLB model
+        const loader = new GLTFLoader();
         loader.load(
-            './insect_01_remesh.glb', // Ensure this path matches the location of your GLB file
+            './insect_01_remesh.glb', // Make sure this path matches your GLB file location
             (gltf) => {
                 scene.add(gltf.scene);
                 animate();
@@ -39,8 +43,10 @@
             }
         );
 
+        // Position the camera
         camera.position.z = 5;
 
+        // Animation loop
         function animate() {
             requestAnimationFrame(animate);
             renderer.render(scene, camera);
